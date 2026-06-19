@@ -87,7 +87,7 @@ class WorkflowInvocation(GenAIInvocation):
 
     def _apply_finish(self, error: Error | None = None) -> None:
         attributes: dict[str, AttributeValue] = {
-            GenAI.GEN_AI_OPERATION_NAME: self._operation_name
+            GenAI.GEN_AI_OPERATION_NAME: self._operation_name,
         }
         attributes.update(self._get_messages_for_span())
         if error is not None:

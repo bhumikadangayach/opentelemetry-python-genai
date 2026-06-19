@@ -3,8 +3,6 @@
 
 from __future__ import annotations
 
-from opentelemetry.util.types import AttributeValue
-
 from opentelemetry._logs import Logger
 from opentelemetry.semconv._incubating.attributes import (
     gen_ai_attributes as GenAI,
@@ -24,6 +22,7 @@ from opentelemetry.util.genai.types import (
     OutputMessage,
     ToolDefinition,
 )
+from opentelemetry.util.types import AttributeValue
 
 
 class AgentInvocation(GenAIInvocation):
@@ -176,7 +175,7 @@ class AgentInvocation(GenAIInvocation):
             for_span=True,
         )
 
-    def _get_metric_attributes(self) ->dict[str, AttributeValue]:
+    def _get_metric_attributes(self) -> dict[str, AttributeValue]:
         optional_attrs = (
             (GenAI.GEN_AI_PROVIDER_NAME, self.provider),
             (GenAI.GEN_AI_REQUEST_MODEL, self.request_model),

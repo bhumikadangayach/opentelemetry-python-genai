@@ -10,7 +10,6 @@ from contextvars import Token
 from dataclasses import asdict
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, Sequence, TypeAlias
-from opentelemetry.util.types import AttributeValue
 
 from opentelemetry._logs import Logger, LogRecord
 from opentelemetry.context import Context, attach, detach
@@ -34,6 +33,7 @@ from opentelemetry.util.genai.utils import (
     gen_ai_json_dumps,
     get_content_capturing_mode,
 )
+from opentelemetry.util.types import AttributeValue
 
 if TYPE_CHECKING:
     from opentelemetry.util.genai.metrics import InvocationMetricsRecorder
@@ -187,7 +187,7 @@ def get_content_attributes(
     system_instruction: Sequence[MessagePart],
     tool_definitions: Sequence[ToolDefinition] | None,
     for_span: bool,
-) -> dict[str, AttributeValue]:
+) -> dict[str, Any]:
     """Serialize messages, system instructions, and tool definitions into attributes.
 
     Args:

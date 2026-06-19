@@ -3,8 +3,6 @@
 
 from __future__ import annotations
 
-
-
 from opentelemetry._logs import Logger
 from opentelemetry.semconv._incubating.attributes import (
     gen_ai_attributes as GenAI,
