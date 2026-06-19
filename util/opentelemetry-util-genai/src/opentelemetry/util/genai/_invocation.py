@@ -10,6 +10,7 @@ from contextvars import Token
 from dataclasses import asdict
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, Sequence, TypeAlias
+from opentelemetry.util.types import AttributeValue
 
 from opentelemetry._logs import Logger, LogRecord
 from opentelemetry.context import Context, attach, detach
@@ -61,19 +62,19 @@ class GenAIInvocation(AbstractContextManager["GenAIInvocation"]):
         operation_name: str,
         span_name: str,
         span_kind: SpanKind = SpanKind.CLIENT,
-        attributes: dict[str, Any] | None = None,
-        metric_attributes: dict[str, Any] | None = None,
+        attributes: dict[str, AttributeValue] | None = None,
+        metric_attributes: dict[str, AttributeValue] | None = None,
     ) -> None:
         self._tracer = tracer
         self._metrics_recorder = metrics_recorder
         self._logger = logger
         self._completion_hook = completion_hook
         self._operation_name: str = operation_name
-        self.attributes: dict[str, Any] = (
+        self.attributes: dict[str, AttributeValue] = (
             {} if attributes is None else attributes
         )
         """Additional attributes to set on spans and/or events. Not set on metrics."""
-        self.metric_attributes: dict[str, Any] = (
+        self.metric_attributes: dict[str, AttributeValue] = (
             {} if metric_attributes is None else metric_attributes
         )
         """Additional attributes to set on metrics. Must be low cardinality. Not set on spans or events."""
@@ -84,7 +85,7 @@ class GenAIInvocation(AbstractContextManager["GenAIInvocation"]):
         self._context_token: ContextToken | None = None
         self._monotonic_start_s: float | None = None
 
-    def _start(self, attributes: dict[str, Any] | None = None) -> None:
+    def _start(self, attributes: dict[str, AttributeValue] | None = None) -> None:
         """Start the invocation span and attach it to the current context.
 
         Args:
@@ -99,7 +100,7 @@ class GenAIInvocation(AbstractContextManager["GenAIInvocation"]):
         self._monotonic_start_s = timeit.default_timer()
         self._context_token = attach(self._span_context)
 
-    def _get_metric_attributes(self) -> dict[str, Any]:
+    def _get_metric_attributes(self) -> dict[str, AttributeValue]:
         """Return low-cardinality attributes for metric recording."""
         return self.metric_attributes
 
@@ -186,7 +187,7 @@ def get_content_attributes(
     system_instruction: Sequence[MessagePart],
     tool_definitions: Sequence[ToolDefinition] | None,
     for_span: bool,
-) -> dict[str, Any]:
+) -> dict[str, AttributeValue]:
     """Serialize messages, system instructions, and tool definitions into attributes.
 
     Args:
