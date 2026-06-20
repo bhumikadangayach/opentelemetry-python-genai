@@ -42,8 +42,8 @@ class AgentInvocation(GenAIInvocation):
         metrics_recorder: InvocationMetricsRecorder,
         logger: Logger,
         completion_hook: CompletionHook,
-        provider: str,
         *,
+        provider: str | None = None,
         span_kind: SpanKind = SpanKind.INTERNAL,
         request_model: str | None = None,
         server_address: str | None = None,
@@ -63,10 +63,10 @@ class AgentInvocation(GenAIInvocation):
             else _operation_name,
             span_kind=span_kind,
         )
-        self.provider = provider
         self.request_model = request_model
         self.server_address = server_address
         self.server_port = server_port
+        self.provider = provider
 
         self.agent_name: str | None = agent_name
         self.agent_id: str | None = None
@@ -103,6 +103,7 @@ class AgentInvocation(GenAIInvocation):
     def _get_base_attributes(self) -> dict[str, AttributeValue]:
         """Return sampling-relevant attributes available at span creation time."""
         optional_attrs = (
+            (GenAI.GEN_AI_PROVIDER_NAME, self.provider),
             (GenAI.GEN_AI_REQUEST_MODEL, self.request_model),
             (GenAI.GEN_AI_AGENT_NAME, self.agent_name),
             (server_attributes.SERVER_ADDRESS, self.server_address),
@@ -110,12 +111,12 @@ class AgentInvocation(GenAIInvocation):
         )
         return {
             GenAI.GEN_AI_OPERATION_NAME: self._operation_name,
-            GenAI.GEN_AI_PROVIDER_NAME: self.provider,
             **{k: v for k, v in optional_attrs if v is not None},
         }
 
     def _get_common_attributes(self) -> dict[str, AttributeValue]:
         optional_attrs = (
+            (GenAI.GEN_AI_PROVIDER_NAME, self.provider),
             (GenAI.GEN_AI_REQUEST_MODEL, self.request_model),
             (server_attributes.SERVER_ADDRESS, self.server_address),
             (server_attributes.SERVER_PORT, self.server_port),
@@ -126,7 +127,6 @@ class AgentInvocation(GenAIInvocation):
         )
         return {
             GenAI.GEN_AI_OPERATION_NAME: self._operation_name,
-            GenAI.GEN_AI_PROVIDER_NAME: self.provider,
             **{k: v for k, v in optional_attrs if v is not None},
         }
 
