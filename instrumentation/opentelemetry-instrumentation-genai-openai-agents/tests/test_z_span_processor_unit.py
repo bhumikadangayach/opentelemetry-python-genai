@@ -503,6 +503,22 @@ def test_span_lifecycle_and_shutdown(processor_setup):
         == sp.GenAIOperationName.INVOKE_AGENT
     )
 
+def test_root_span_kind_is_internal(processor_setup):
+    """Regression test for #154: root span must be INTERNAL, not SERVER.
+
+    invoke_agent root spans don't represent the server side of a
+    synchronous remote call, so SpanKind.SERVER is incorrect per the
+    OTel semantic conventions for span kinds.
+    """
+    processor, exporter = processor_setup
+
+    trace = FakeTrace(name="workflow", trace_id="trace-root-kind")
+    processor.on_trace_start(trace)
+    processor.on_trace_end(trace)
+
+    finished = exporter.get_finished_spans()
+    assert len(finished) == 1
+    assert finished[0].kind is SpanKind.INTERNAL
 
 def test_chat_span_renamed_with_model(processor_setup):
     processor, exporter = processor_setup

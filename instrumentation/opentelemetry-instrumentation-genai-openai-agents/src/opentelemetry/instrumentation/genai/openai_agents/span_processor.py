@@ -1312,7 +1312,7 @@ class GenAISemanticProcessor(TracingProcessor):
             otel_span = self._tracer.start_span(
                 name=trace.name,
                 attributes=attributes,
-                kind=SpanKind.SERVER,  # Root span is typically server
+                kind=SpanKind.INTERNAL,  # Root span is typically server
             )
             self._root_spans[trace.trace_id] = otel_span
 
