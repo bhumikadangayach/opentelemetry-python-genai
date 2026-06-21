@@ -97,7 +97,9 @@ class InferenceInvocation(GenAIInvocation):
         self.output_type: str | None = None
         self._start(self._get_base_attributes())
 
-    def _get_message_attributes(self, *, for_span: bool) -> dict[str, AttributeValue]:
+    def _get_message_attributes(
+        self, *, for_span: bool
+    ) -> dict[str, AttributeValue]:
         return get_content_attributes(
             input_messages=self.input_messages,
             output_messages=self.output_messages,

@@ -85,7 +85,9 @@ class GenAIInvocation(AbstractContextManager["GenAIInvocation"]):
         self._context_token: ContextToken | None = None
         self._monotonic_start_s: float | None = None
 
-    def _start(self, attributes: dict[str, AttributeValue] | None = None) -> None:
+    def _start(
+        self, attributes: dict[str, AttributeValue] | None = None
+    ) -> None:
         """Start the invocation span and attach it to the current context.
 
         Args:
