@@ -192,7 +192,11 @@ class OpenTelemetryLangChainCallbackHandler(BaseCallbackHandler):
         **kwargs: Any,
     ) -> None:
         # Other providers/LLMs may be supported in the future and telemetry for them is skipped for now.
-        if serialized.get("name") not in ("ChatOpenAI", "ChatBedrock", "ChatAnthropic"):
+        if serialized.get("name") not in (
+            "ChatOpenAI",
+            "ChatBedrock",
+            "ChatAnthropic",
+        ):
             return
 
         if "invocation_params" in kwargs:
@@ -233,10 +237,18 @@ class OpenTelemetryLangChainCallbackHandler(BaseCallbackHandler):
             top_p = params.get("top_p")
             frequency_penalty = params.get("frequency_penalty")
             presence_penalty = params.get("presence_penalty")
-            stop_sequences = params.get("stop") if params.get("stop") is not None else params.get("stop_sequences")
+            stop_sequences = (
+                params.get("stop")
+                if params.get("stop") is not None
+                else params.get("stop_sequences")
+            )
             seed = params.get("seed")
             temperature = params.get("temperature")
-            max_tokens = params.get("max_completion_tokens") if params.get("max_completion_tokens") is not None else params.get("max_tokens")
+            max_tokens = (
+                params.get("max_completion_tokens")
+                if params.get("max_completion_tokens") is not None
+                else params.get("max_tokens")
+            )
 
         provider = "unknown"
         if metadata is not None:
