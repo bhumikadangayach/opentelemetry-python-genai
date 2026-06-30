@@ -18,7 +18,7 @@
 langchain-openai
 langchain-aws
 langchain-google-genai
+langchain-anthropic
 boto3
-
 -e util/opentelemetry-util-genai
 -e instrumentation/opentelemetry-instrumentation-genai-langchain[instruments]
